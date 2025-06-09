@@ -1,0 +1,99 @@
+# TeraDeck - Guía de Desarrollo
+
+## Flujo de Trabajo
+
+### Configuración Inicial
+1. Clonar repositorio y navegar al directorio: `cd TeraDeck`
+2. Instalar dependencias: `npm install`
+3. Ejecutar servidor de desarrollo: `npm run dev`
+
+### Estructura de Archivos Importantes
+
+#### Configuración del Monorepo
+- [package.json](mdc:package.json) - Configuración principal con workspaces de Yarn
+- [frontend/package.json](mdc:frontend/package.json) - Dependencias del frontend
+- [backend/package.json](mdc:backend/package.json) - Dependencias del backend
+
+#### Configuración de Desarrollo
+- [frontend/vite.config.ts](mdc:frontend/vite.config.ts) - Configuración de Vite
+- [frontend/tailwind.config.js](mdc:frontend/tailwind.config.js) - Configuración de TailwindCSS
+- [backend/tsconfig.json](mdc:backend/tsconfig.json) - Configuración de TypeScript para backend
+
+## Patrones de Código
+
+### Frontend React
+- **Hooks personalizados**: [useTranslation.ts](mdc:frontend/src/hooks/useTranslation.ts), [useTargeting.ts](mdc:frontend/src/hooks/useTargeting.ts)
+- **Componentes funcionales** con TypeScript
+- **Props tipadas** usando interfaces del directorio shared
+- **Estilos**: Clases de TailwindCSS + CSS personalizado en [index.css](mdc:frontend/src/styles/index.css)
+
+### Backend Node.js
+- **Servicios modulares** en [backend/src/services/](mdc:backend/src/services/)
+- **Controladores** en [backend/src/controllers/](mdc:backend/src/controllers/)
+- **Middleware** para manejo de errores y validaciones
+- **Socket.IO** para comunicación en tiempo real
+
+### Código Compartido
+- **Tipos TypeScript** centralizados en [shared/src/types/](mdc:shared/src/types/)
+- **Utilidades** reutilizables en [shared/src/utils/](mdc:shared/src/utils/)
+- **Constantes** del juego en [shared/src/constants/](mdc:shared/src/constants/)
+
+## Convenciones de Naming
+
+### Archivos y Directorios
+- **Componentes React**: PascalCase (ej: `GameBoard.tsx`)
+- **Hooks**: camelCase con prefijo "use" (ej: `useTargeting.ts`)
+- **Servicios**: PascalCase con sufijo "Service" (ej: `AIService.ts`)
+- **Tipos**: camelCase para interfaces, PascalCase para enums
+
+### Variables y Funciones
+- **Variables**: camelCase en inglés
+- **Funciones**: camelCase en inglés, verbos descriptivos
+- **Constantes**: UPPER_SNAKE_CASE
+- **Comentarios de código**: En inglés
+- **UI y logs**: En español (idioma del juego)
+
+## Sistema de Internacionalización
+
+### Estructura de Traducciones
+- [es.ts](mdc:shared/src/i18n/locales/es.ts) - Traducciones en español
+- [en.ts](mdc:shared/src/i18n/locales/en.ts) - Traducciones en inglés
+- [index.ts](mdc:shared/src/i18n/index.ts) - Sistema de traducciones y tipos
+
+### Uso en Componentes
+```typescript
+const { t, tUI } = useTranslation();
+// UI: tUI('lobby.title')
+// Contenido: t('cards.modules.backend.name')
+```
+
+## Testing y Debugging
+
+### Herramientas de Debug
+- **Demo del Targeting**: Botón en el Lobby para probar el sistema
+- **Logs de IA**: Habilitados por defecto, muestran razonamiento de decisiones
+- **DevTools de React**: Extensión recomendada para desarrollo
+
+### Estructura de Testing
+- Tests unitarios en directorios `__tests__` junto a los archivos
+- Tests de integración en [tests/](mdc:tests/)
+- Mocks para Socket.IO en tests
+
+## Reglas de Commit
+
+### Formato de Mensajes
+```
+tipo(alcance): descripción
+
+feat(ai): implementar IA nivel difícil
+fix(targeting): corregir validación de objetivos
+docs(readme): actualizar instrucciones de instalación
+```
+
+### Tipos de Commit
+- `feat`: Nueva funcionalidad
+- `fix`: Corrección de bugs
+- `docs`: Documentación
+- `refactor`: Refactoring sin cambios funcionales
+- `test`: Agregar o modificar tests
+- `style`: Cambios de formato/estilo

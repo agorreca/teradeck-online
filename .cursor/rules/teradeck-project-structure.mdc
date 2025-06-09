@@ -1,0 +1,81 @@
+# TeraDeck Online - Estructura del Proyecto
+
+## Descripción General
+TeraDeck Online es un juego de cartas multijugador basado en el juego físico TeraDeck. Es una implementación completa con frontend React + TypeScript, backend Node.js + Socket.IO, y sistema de IA.
+
+## Estructura del Monorepo
+
+### Frontend ([frontend/](mdc:frontend/))
+- **Framework**: React 18 + TypeScript + Vite
+- **Enrutamiento**: React Router DOM
+- **Estilos**: TailwindCSS + CSS personalizado
+- **Internacionalización**: Sistema i18n con español/inglés
+- **Componentes principales**:
+  - [Lobby.tsx](mdc:frontend/src/components/lobby/Lobby.tsx) - Pantalla principal con creación/unión a salas
+  - [GameBoard.tsx](mdc:frontend/src/components/game/GameBoard.tsx) - Mesa de juego principal
+  - [TargetingOverlay.tsx](mdc:frontend/src/components/game/TargetingOverlay.tsx) - Sistema de targeting para cartas
+  - [TargetingDemo.tsx](mdc:frontend/src/components/game/TargetingDemo.tsx) - Demostración interactiva del targeting
+
+### Backend ([backend/](mdc:backend/))
+- **Framework**: Node.js + Express + Socket.IO
+- **Lenguaje**: TypeScript
+- **Servicios principales**:
+  - [AIService.ts](mdc:backend/src/services/AIService.ts) - Sistema de IA con 3 niveles de dificultad
+  - [AITurnManager.ts](mdc:backend/src/services/AITurnManager.ts) - Gestor de turnos de IA
+  - [GameService.ts](mdc:backend/src/services/GameService.ts) - Lógica principal del juego
+  - [SocketService.ts](mdc:backend/src/services/SocketService.ts) - Manejo de conexiones WebSocket
+
+### Shared ([shared/](mdc:shared/))
+- **Tipos**: [game.ts](mdc:shared/src/types/game.ts) - Interfaces y tipos TypeScript compartidos
+- **Utilidades**: [targeting.ts](mdc:shared/src/utils/targeting.ts) - Sistema de targeting de cartas
+- **Cartas**: [cards.ts](mdc:shared/src/game/cards.ts) - Definiciones de las 68 cartas del juego
+- **i18n**: [index.ts](mdc:shared/src/i18n/index.ts) - Sistema de traducciones
+
+## Reglas del Juego TeraDeck
+
+### Objetivo
+Ser el primero en reunir 4 módulos estables de diferentes tipos:
+- Backend (azul)
+- Frontend (amarillo) 
+- Mobile (rojo)
+- Data Science (verde)
+
+### Tipos de Cartas
+1. **Módulos (21 cartas)**: Colocar en tu área de juego
+2. **Bugs (17 cartas)**: Sabotean módulos enemigos
+3. **Parches (20 cartas)**: Protegen/reparan módulos propios
+4. **Operaciones (10 cartas)**: Efectos especiales
+
+### Sistema de Targeting
+Cartas que requieren seleccionar objetivos:
+- **Bugs**: Módulos enemigos compatibles por color
+- **Parches**: Módulos propios para proteger
+- **Operaciones**: Jugadores/módulos según efecto específico
+
+## Comandos de Desarrollo
+
+```bash
+# Instalar dependencias
+npm install
+
+# Desarrollo (ejecutar desde directorio TeraDeck)
+cd TeraDeck && npm run dev
+
+# Construcción
+npm run build
+
+# Testing
+npm test
+```
+
+## Sistema de IA
+
+### Niveles de Dificultad
+- **Fácil**: Movimientos aleatorios válidos
+- **Normal**: Prioriza módulos y ataca al líder
+- **Difícil**: Estrategia avanzada con análisis de fases del juego
+
+### Características
+- Tiempos de "pensamiento" variables según dificultad
+- Análisis de amenazas y oportunidades
+- Targeting inteligente basado en estado del juego

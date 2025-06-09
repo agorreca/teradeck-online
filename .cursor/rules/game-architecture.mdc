@@ -1,0 +1,45 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# TeraDeck Game Architecture Guide
+
+## Core Game Types
+All game logic is built around these key types in [shared/src/types/game.ts](mdc:shared/src/types/game.ts):
+
+### Essential Interfaces
+- **Player**: Game participant with hand, modules, and connection state
+- **GameState**: Complete game state including players, deck, turn info
+- **Card**: Base interface for all card types (Module, Bug, Patch, Operation)
+- **GameAction**: Player actions with type-safe data structures
+
+### Game Logic Flow
+1. **Game Initialization**: [shared/src/game/gameLogic.ts](mdc:shared/src/game/gameLogic.ts) `initializeGame()`
+2. **Action Processing**: `processGameAction()` handles all player actions
+3. **Card Effects**: [shared/src/game/cardEffects.ts](mdc:shared/src/game/cardEffects.ts) implements card-specific logic
+4. **Win Conditions**: `checkWinCondition()` validates 4 stable modules of different types
+
+## Card System (68 Total Cards)
+Defined in [shared/src/constants/cards.ts](mdc:shared/src/constants/cards.ts):
+- **21 Modules**: 1 multicolor + 5 each type (Backend, Frontend, Mobile, Data Science)
+- **17 Bugs**: 1 multicolor + 4 each type
+- **20 Patches**: 4 multicolor + 4 each type  
+- **10 Operations**: Architect Change(3), Ace Recruitment(3), Internal Phishing(2), End Year Party(1), Project Swap(1)
+
+## Backend Integration
+The [backend/src/services/GameManager.ts](mdc:backend/src/services/GameManager.ts) class:
+- Manages multiple game rooms and players
+- Integrates with Socket.IO events in [backend/src/socket/gameSocket.ts](mdc:backend/src/socket/gameSocket.ts)
+- Uses shared game logic for validation and processing
+- Handles room creation, player management, and game state updates
+
+## Frontend Components
+Key UI components are being migrated to modern libraries:
+- **Card Component**: Uses Framer Motion animations
+- **Modal System**: Built with Radix UI for accessibility
+- **Internationalization**: react-i18next for Spanish/English support
+- **Styling**: Tailwind CSS with custom TeraDeck theme colors
+
+## Socket.IO Events
+All real-time communication follows the SocketEvents interface for type safety.

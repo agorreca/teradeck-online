@@ -1,0 +1,40 @@
+# TeraDeck Project Overview
+
+## Project Description
+TeraDeck Online es una adaptación digital del juego de cartas "Virus!" con temática de desarrollo de software. El juego simula la construcción y mantenimiento de proyectos tecnológicos donde los jugadores deben ensamblar módulos (Backend, Frontend, Mobile, Data Science) mientras defienden contra bugs y usan parches para proteger sus sistemas.
+
+## Project Structure
+```
+TeraDeck/
+├── frontend/           # React + TypeScript + Vite aplicación
+├── backend/           # Node.js + Express + Socket.IO servidor
+├── shared/           # Tipos y lógica compartida
+└── docs/            # Documentación en español e inglés
+```
+
+## Key Technologies
+- **Frontend**: React 18, TypeScript, Vite, Tailwind CSS
+- **Backend**: Node.js, Express, Socket.IO, TypeScript  
+- **Shared**: TypeScript types, game logic, constants
+- **Development**: ESLint, Prettier, Jest para testing
+
+## Game Mechanics Implemented
+- **68 cartas totales**: 21 Módulos, 17 Bugs, 20 Patches, 10 Operaciones
+- **Estados de módulo**: Libre, Parcheado, Buggeado, Estabilizado, Colapsado
+- **Cartas multicolor**: Funcionan con cualquier tipo de módulo
+- **Operaciones especiales**: Cambio de Arquitecto, Reclutamiento, Phishing, etc.
+- **Mecánicas dobles**: 2 bugs = colapso, 2 patches = estabilización
+
+## Current Status
+✅ Frontend demo completa implementada
+✅ Todas las mecánicas del juego funcionando  
+✅ Sistema de tipos TypeScript robusto
+✅ Configuración de desarrollo estable
+🚧 Backend multiplayer en desarrollo
+🚧 Sistema de salas y Socket.IO
+
+## Entry Points
+- Frontend: [frontend/src/App.tsx](mdc:frontend/src/App.tsx) - Demo interactiva
+- Backend: [backend/src/index.ts](mdc:backend/src/index.ts) - Servidor Express
+- Shared Types: [shared/src/types/game.ts](mdc:shared/src/types/game.ts) - Definiciones del juego
+- Game Cards: [shared/src/constants/cards.ts](mdc:shared/src/constants/cards.ts) - Todas las cartas del juego

@@ -1,0 +1,105 @@
+{
+  "landing": {
+    "title": "TeraDeck Online",
+    "subtitle": "El juego de cartas para desarrolladores",
+    "playWithFriends": "Jugar con Amigos",
+    "playOnline": "Jugar en Línea",
+    "playWithAI": "Jugar contra IA",
+    "tutorial": "Tutorial",
+    "settings": "Configuración"
+  },
+  "game": {
+    "yourProject": "Tu Proyecto",
+    "progress": "Progreso",
+    "otherPlayers": "Otros Jugadores",
+    "you": "Tú",
+    "opponent1": "Oponente 1",
+    "opponent2": "Oponente 2",
+    "player": "Jugador",
+    "maxModules": "Máximo 8 módulos alcanzado",
+    "alreadyHasModule": "Ya tienes un módulo {{color}}",
+    "noValidTargets": "No hay objetivos válidos disponibles",
+    "noValidModulesForBug": "No hay módulos válidos para introducir bugs",
+    "noValidModulesForPatch": "No hay módulos válidos para parchear",
+    "gameStarted": "¡Juego iniciado!",
+    "yourTurn": "Es tu turno",
+    "aiTurn": "Turno de la IA...",
+    "cantPlay": "No se puede jugar",
+    "aiPlayed": "La IA ha jugado: {{card}}",
+    "aiDiscarded": "La IA ha descartado {{count}} carta(s) (no podía jugar)",
+    "played": "Jugado: {{card}}",
+    "youWon": "¡HAS GANADO!",
+    "selectCardsToDiscard": "Selecciona cartas para descartar",
+    "confirmDiscard": "Confirmar descarte",
+    "cancel": "Cancelar",
+    "selectTarget": "Seleccionar Objetivo",
+    "availableModules": "Módulos disponibles:",
+    "yours": "Tuyo",
+    "opponent": "Oponente",
+    "opponentDetails": "Detalles del Oponente",
+    "modules": "Módulos:",
+    "noModules": "Este oponente no tiene módulos",
+    "close": "Cerrar",
+    "playModulesToBuild": "Juega cartas de módulo para construir tu proyecto...",
+    "noModulesYet": "Sin módulos",
+    "startingGameWith": "¡Partida iniciada con {{count}} oponente(s)! Es tu turno.",
+    "startingVsAI": "¡Iniciando partida contra {{count}} IA {{difficulty}}!"
+  },
+  "cards": {
+    "types": {
+      "module": "Módulo",
+      "bug": "Bug",
+      "patch": "Parche",
+      "operation": "Operación"
+    },
+    "colors": {
+      "backend": "Backend",
+      "frontend": "Frontend",
+      "mobile": "Mobile",
+      "dataScience": "Data Science",
+      "multicolor": "Multicolor"
+    },
+    "states": {
+      "free": "Libre",
+      "bugged": "Con Bug",
+      "patched": "Parcheado",
+      "stabilized": "Estabilizado",
+      "collapsed": "Colapsado"
+    }
+  },
+  "settings": {
+    "title": "Configuración",
+    "language": "Idioma",
+    "spanish": "Español",
+    "spanishAR": "Español (Argentina)",
+    "spanishES": "Español (España)",
+    "spanishMX": "Español (México)",
+    "english": "Inglés",
+    "englishUS": "Inglés (Estados Unidos)",
+    "englishUK": "Inglés (Reino Unido)",
+    "french": "Francés",
+    "portuguese": "Portugués",
+    "italian": "Italiano",
+    "german": "Alemán",
+    "back": "Volver"
+  },
+  "ai": {
+    "easy": "Fácil",
+    "normal": "Normal",
+    "hard": "Difícil",
+    "selectOpponents": "Selecciona el número de oponentes (1-3):",
+    "selectDifficulty": "Selecciona la dificultad:\n1 - Fácil (movimientos aleatorios)\n2 - Normal (estrategia equilibrada)\n3 - Difícil (estrategia avanzada)"
+  },
+  "operations": {
+    "architectChange": "Cambio de Arquitecto",
+    "recruitAce": "Fichaje del As",
+    "internalPhishing": "Phishing Interno",
+    "yearEndParty": "Fiesta de Fin de Año",
+    "projectSwap": "Intercambio de Proyecto",
+    "selectModuleToSteal": "Selecciona qué módulo quieres robar:",
+    "selectYourModule": "Selecciona uno de tus módulos:",
+    "selectOpponentModule": "Selecciona un módulo del oponente:",
+    "noValidModulesToSteal": "No hay módulos válidos para robar",
+    "noModulesForExchange": "No hay módulos para intercambiar"
+  }
+}

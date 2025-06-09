@@ -1,0 +1,230 @@
+# TeraDeck Online - Project Guide
+
+## Project Overview
+TeraDeck Online is a digital multiplayer implementation of the physical TeraDeck card game. It's built as a monorepo with React + TypeScript frontend, Node.js + Socket.IO backend, and shared TypeScript libraries.
+
+# TeraDeck Online - Proyecto Completo
+
+## Descripción General
+TeraDeck Online es una implementación digital del juego de cartas físico TeraDeck. Es un monorepo con frontend React + TypeScript, backend Node.js + Socket.IO, y librerías TypeScript compartidas.
+
+## Estructura del Proyecto
+
+### Arquitectura Principal
+```
+TeraDeck/
+├── frontend/          # Cliente React + TypeScript + TailwindCSS
+├── backend/           # Servidor Node.js + Socket.IO + Express
+├── shared/            # Tipos y utilidades TypeScript compartidas
+├── tests/             # Pruebas de integración
+└── docs/              # Documentación (español/inglés)
+```
+
+### Archivos Clave
+- Aplicación principal: [frontend/src/App.tsx](mdc:frontend/src/App.tsx)
+- Tipos de juego: [shared/src/types/game.ts](mdc:shared/src/types/game.ts)
+- Sistema de targeting: [shared/src/utils/targeting.ts](mdc:shared/src/utils/targeting.ts)
+- Servicio de IA: [backend/src/services/AIService.ts](mdc:backend/src/services/AIService.ts)
+- Estilos principales: [frontend/src/styles/index.css](mdc:frontend/src/styles/index.css)
+
+## Mecánicas del Juego TeraDeck
+
+### Reglas del Juego Físico
+- **Objetivo**: Ser el primero en tener 4 módulos estables
+- **Cartas totales**: 68 funcionales + 4 vacías
+- **Distribución exacta**:
+  - Módulos (21): 1 multicolor, 5 Backend, 5 Frontend, 5 Mobile, 5 Data Science
+  - Bugs (17): 1 multicolor, 4 Backend, 4 Frontend, 4 Mobile, 4 Data Science  
+  - Parches (20): 4 multicolor, 4 Backend, 4 Frontend, 4 Mobile, 4 Data Science
+  - Operaciones (10): 3 Cambio de Arquitecto, 3 Reclutamiento del Groso, 2 Phishing Interno, 1 Fiesta de Fin de Año, 1 Project Swap
+
+### Restricciones Importantes
+- **Bugs**: Solo se pueden colocar sobre módulos/parches del mismo color
+- **Parches**: Solo se pueden colocar sobre módulos del mismo color  
+- **No se puede**: Jugar bugs/parches "al aire" sin módulos válidos
+- **Duplicados**: No se pueden tener dos módulos del mismo tipo (excepto multicolor)
+- **Turnos**: Jugar 1 carta O descartar 1-3 cartas, luego robar hasta tener 3
+
+## Arquitectura Frontend
+
+### Componente Principal: App.tsx
+El archivo [frontend/src/App.tsx](mdc:frontend/src/App.tsx) contiene toda la lógica del juego:
+
+```typescript
+// Estados principales
+const [playerHand, setPlayerHand] = useState<GameCard[]>([]);
+const [gameDeck, setGameDeck] = useState<GameCard[]>([]);
+const [appState, setAppState] = useState<AppState>({
+  currentScreen: 'landing' | 'game' | 'settings',
+  language: 'es' | 'en',
+  currentPlayer: string,
+  players: Player[]
+});
+```
+
+### Sistema de Cartas Dinámico
+- **Mazo completo**: Se crea y baraja al inicio con `createFullDeck()` y `shuffleDeck()`
+- **Zona de proyecto**: Crece dinámicamente, no limitada a 5 slots
+- **Validaciones**: Evita duplicados y respeta límite de 8 módulos máximo
+- **Tipos de carta**: Módulos, Bugs, Parches, Operaciones con diferentes efectos
+
+### Gestión de Estado
+```typescript
+interface GameCard {
+  id: string;
+  name: LanguageStrings;
+  description: LanguageStrings;
+  effect?: LanguageStrings;
+  type: 'module' | 'bug' | 'patch' | 'operation';
+  color?: 'backend' | 'frontend' | 'mobile' | 'data-science' | 'multicolor';
+}
+```
+
+### Sistema de Internacionalización
+- **Hook principal**: `useTranslation()` (pendiente implementar)
+- **Estructura actual**: Objeto `translations` con claves anidadas
+- **Uso**: `t('game.yourProject')` para UI, `card.name[appState.language]` para cartas
+- **Idiomas**: Español ('es') e Inglés ('en')
+
+## Backend y IA
+
+### Servicios Principales
+- **AIService.ts**: Lógica de decisiones de IA
+- **AITurnManager.ts**: Gestión de tiempos y turnos
+- **AIPlayerGenerator.ts**: Generación de personalidades de IA
+
+### Sistema de IA
+- **Niveles**: Fácil (~750ms), Normal (~1.5s), Difícil (~3s)
+- **Personalidades**: 10 personalidades únicas con descripciones bilingües
+- **Validaciones**: La IA debe validar si puede jugar cartas antes de hacerlo
+
+### Eventos Socket.IO
+```typescript
+// Eventos principales
+'game-updated': // Actualización de estado del juego
+'game-action': // Procesamiento de acciones del jugador
+'room-created' / 'room-joined': // Gestión de salas multijugador
+```
+
+## Patrones de Desarrollo
+
+### Validación de Cartas
+```typescript
+const validation = canPlayCard(card);
+if (!validation.canPlay) {
+  alert(validation.reason);
+  return;
+}
+```
+
+### Funciones de Juego por Tipo
+```typescript
+// Cada tipo de carta tiene su propia función
+playModuleCard(card); // Agrega módulo al proyecto
+playBugCard(card);    // Aplica bug a módulo existente
+playPatchCard(card);  // Aplica parche a módulo existente  
+executeOperation(card); // Ejecuta operación especial
+```
+
+### Internacionalización Correcta
+```typescript
+// ✅ Correcto
+{t('game.yourProject')}
+{appState.language === 'es' ? 'Texto español' : 'English text'}
+
+// ❌ Incorrecto - texto hardcodeado
+{'Tu Proyecto'}
+```
+
+## Styling y UI
+
+### Sistema de Colores por Tipo
+```typescript
+const getCardStyling = (card: GameCard) => {
+  // Módulos: Colores específicos por tipo
+  // Bugs: Rojo (#DC2626)
+  // Parches: Verde (#10B981)  
+  // Operaciones: Morado (#8B5CF6)
+}
+```
+
+### Componentes de UI Principales
+- **LandingPage**: Página de inicio con selección de modo
+- **GamePage**: Interfaz principal del juego con panel lateral
+- **SettingsPage**: Configuración de idioma
+- **Modales**: Targeting, descarte de cartas
+
+### Responsive Design
+- **Panel lateral**: 300px fijo para otros jugadores
+- **Área principal**: Flexible con proyecto dinámico
+- **Zona de proyecto**: FlexBox que crece según módulos jugados
+- **Cartas**: MinWidth 140px, adaptable a pantalla
+
+## Testing y Validación
+
+### Casos de Prueba Críticos
+1. **Validación de cartas**: Módulos duplicados, límites, targeting válido
+2. **Flujo de turnos**: Jugar carta → robar → pasar turno
+3. **Estados de módulos**: Libre → Buggeado → Parcheado → Estabilizado
+4. **IA**: Validación antes de jugar, descarte si no puede jugar
+
+### Problemas Comunes y Soluciones
+- **Bugs/Parches sin módulos**: Validar que existan módulos válidos antes de permitir jugar
+- **Cartas inexistentes**: Revisar mazo contra especificación oficial
+- **Internacionalización**: Usar siempre claves de traducción, nunca texto hardcodeado
+
+## Optimización y Performance
+
+### React
+- Keys únicos para listas de cartas: `key={card.id}`
+- Minimizar re-renders con estructura de estado cuidadosa
+- Memoización de funciones costosas si es necesario
+
+### Socket.IO  
+- Batch de cambios de estado en una sola emisión
+- Manejo robusto de errores de red
+- Timeouts apropiados para turnos de IA
+
+## Configuración de Despliegue
+
+### Frontend
+- **Build**: Vite outputs a `frontend/dist/`
+- **PWA**: Configuración lista para Progressive Web App
+- **CSS**: TailwindCSS optimizado para producción
+
+### Backend
+- **CORS**: Configurado para producción con Socket.IO
+- **Variables de entorno**: Diferentes stages de deployment
+- **Logging**: Sistema robusto de logs y manejo de errores
+
+## Reglas de Desarrollo Específicas
+
+### Comentarios en Código
+- **OBLIGATORIO**: Todos los comentarios en el código deben estar en inglés simple
+- **Formato**: Comentarios descriptivos y concisos
+- **Ejemplos**:
+  ```typescript
+  // Player hand management
+  const [playerHand, setPlayerHand] = useState<GameCard[]>([]);
+  
+  // Validate if card can be played before execution
+  const validation = canPlayCard(card);
+  
+  // Update game state after AI turn
+  updateGameState(newState);
+  ```
+
+### Internacionalización Obligatoria
+- **Nunca** hardcodear texto en español o inglés
+- **Siempre** usar `t('clave.anidada')` o `appState.language === 'es' ? 'texto' : 'text'`
+- **Validar** que todas las claves existan en ambos idiomas
+
+### Validación de Reglas del Juego
+- **Bugs/Parches**: Siempre requieren módulos válidos del mismo color
+- **Operaciones**: Validar condiciones específicas antes de ejecutar
+- **IA**: Debe respetar todas las reglas del juego físico
+
+### Estructura de Cartas Oficial
+- **Total exacto**: 68 cartas funcionales según especificación
+- **No inventar**: Cartas que no existen en el juego original
+- **Respetar**: Cantidades exactas por tipo y color

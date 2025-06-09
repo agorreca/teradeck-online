@@ -1,0 +1,40 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# TypeScript Configuration Guide
+
+## Module System Configuration
+The project uses **CommonJS for backend** and **ESM for frontend** to avoid ts-node compatibility issues.
+
+## Important Configuration Files
+- [backend/tsconfig.json](mdc:backend/tsconfig.json) - Backend TypeScript config (CommonJS)
+- [frontend/tsconfig.json](mdc:frontend/tsconfig.json) - Frontend TypeScript config (ESNext)
+- [backend/package.json](mdc:backend/package.json) - No "type": "module" (CommonJS)
+- [frontend/vite.config.ts](mdc:frontend/vite.config.ts) - Vite configuration with path aliases
+
+## Path Aliases Setup
+Both frontend and backend use `@shared/*` aliases:
+- **Backend**: Uses `tsconfig-paths/register` for runtime resolution
+- **Frontend**: Uses Vite's resolve.alias configuration
+- **Shared path**: `@shared/*` → `../shared/src/*`
+
+## Critical Import Rules
+- **Never use `.js` extensions** in TypeScript imports
+- **Always use relative imports** for local files
+- **Use `@shared/*` aliases** for shared module imports
+- **Backend imports**: CommonJS style with tsconfig-paths
+- **Frontend imports**: ESM style with Vite resolution
+
+## Backend Development Setup
+The backend requires special configuration:
+```json
+// In backend/package.json scripts
+"dev": "nodemon -r tsconfig-paths/register src/index.ts"
+```
+
+## Common Issues & Solutions
+- If seeing "Unknown file extension .ts": Check backend is using CommonJS
+- If @shared imports fail: Verify tsconfig-paths is installed and registered
+- If frontend can't resolve @shared: Check vite.config.ts path aliases

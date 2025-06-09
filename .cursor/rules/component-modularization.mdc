@@ -1,0 +1,189 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# Component Modularization Rules
+
+## File Size Limits
+
+**CRITICAL**: Keep components and files manageable and focused.
+
+### Maximum File Sizes:
+- **React Components**: 200 lines maximum
+- **Utility files**: 150 lines maximum  
+- **Type definitions**: 100 lines maximum
+- **Configuration files**: 50 lines maximum
+
+### When to Split Components:
+
+#### ❌ NEVER create monolithic components like this:
+```typescript
+// App.tsx (1000+ lines) - TOO BIG!
+function App() {
+  // Landing page logic (200 lines)
+  // Settings page logic (200 lines)  
+  // Game page logic (400 lines)
+  // Modal logic (200 lines)
+  return <div>...</div>
+}
+```
+
+#### ✅ ALWAYS split into focused components:
+```typescript
+// App.tsx (50 lines) - Main router
+// components/pages/LandingPage.tsx (150 lines)
+// components/pages/SettingsPage.tsx (100 lines)
+// components/pages/GamePage.tsx (200 lines)
+// components/modals/OpponentSelectorModal.tsx (150 lines)
+```
+
+## Directory Structure
+
+### Organize by feature and type:
+```
+src/
+├── components/
+│   ├── common/           # Reusable UI components
+│   │   ├── Button.tsx
+│   │   ├── Modal.tsx
+│   │   └── Card.tsx
+│   ├── game/             # Game-specific components
+│   │   ├── GameBoard.tsx
+│   │   ├── PlayerHand.tsx
+│   │   └── GameStatus.tsx
+│   ├── pages/            # Page-level components
+│   │   ├── LandingPage.tsx
+│   │   ├── GamePage.tsx
+│   │   └── SettingsPage.tsx
+│   └── modals/           # Modal components
+│       ├── OpponentSelectorModal.tsx
+│       └── OperationModal.tsx
+├── hooks/                # Custom React hooks
+├── utils/                # Utility functions
+├── types/                # TypeScript definitions
+└── constants/            # Application constants
+```
+
+## Component Responsibilities
+
+### Single Responsibility Principle:
+- **One component = One responsibility**
+- **Modal components**: Only handle their specific modal
+- **Page components**: Only handle routing and layout
+- **Game components**: Only handle game-specific logic
+- **Common components**: Only handle reusable UI elements
+
+### Component Communication:
+```typescript
+// Use props for parent-child communication
+interface ComponentProps {
+  data: GameData;
+  onAction: (action: Action) => void;
+}
+
+// Use custom hooks for shared logic
+const useGameLogic = () => {
+  // Shared game state management
+}
+
+// Use context for deep prop drilling
+const GameContext = createContext();
+```
+
+## Breaking Down Large Components
+
+### When a component exceeds 200 lines:
+
+1. **Extract sub-components**:
+```typescript
+// Instead of one large GamePage
+const GamePage = () => (
+  <div>
+    <GameHeader />
+    <GameBoard />
+    <PlayerControls />
+    <GameLog />
+  </div>
+);
+```
+
+2. **Extract custom hooks**:
+```typescript
+// Extract logic to custom hooks
+const usePlayerActions = () => {
+  // Player action logic
+};
+
+const useGameState = () => {
+  // Game state management
+};
+```
+
+3. **Extract utility functions**:
+```typescript
+// utils/gameHelpers.ts
+export const getModuleColor = (color: string) => { ... };
+export const calculateScore = (modules: Module[]) => { ... };
+```
+
+## File Naming Conventions
+
+- **Components**: PascalCase.tsx (e.g., `GameBoard.tsx`)
+- **Hooks**: camelCase starting with 'use' (e.g., `useGameLogic.ts`)
+- **Utils**: camelCase.ts (e.g., `gameHelpers.ts`)
+- **Types**: camelCase.ts (e.g., `gameTypes.ts`)
+- **Constants**: UPPER_SNAKE_CASE.ts (e.g., `GAME_CONSTANTS.ts`)
+
+## Validation Checklist
+
+Before committing, verify:
+- [ ] No component exceeds 200 lines
+- [ ] Each component has a single responsibility
+- [ ] Related components are grouped in appropriate directories
+- [ ] Shared logic is extracted to custom hooks
+- [ ] Utility functions are properly separated
+- [ ] Components are properly typed with TypeScript
+- [ ] File names follow conventions
+
+## Examples of Good Modularization
+
+### ✅ GOOD: Focused components
+```typescript
+// components/game/PlayerHand.tsx (80 lines)
+interface PlayerHandProps {
+  cards: Card[];
+  onCardSelect: (card: Card) => void;
+  selectedCard?: Card;
+  disabled?: boolean;
+}
+
+export const PlayerHand: React.FC<PlayerHandProps> = ({ ... }) => {
+  // Only handles player hand display and interaction
+};
+```
+
+### ❌ BAD: Monolithic component
+```typescript
+// App.tsx (1000+ lines)
+export function App() {
+  // Game logic
+  // UI rendering for multiple pages
+  // Modal management
+  // State management
+  // Everything mixed together
+}
+```
+
+## Refactoring Strategy
+
+When refactoring large components:
+
+1. **Identify distinct sections** (e.g., header, sidebar, main content)
+2. **Extract each section** into its own component
+3. **Move shared logic** to custom hooks
+4. **Extract constants** to separate files
+5. **Create proper prop interfaces** for each component
+6. **Test each component** individually
+
+Remember: **Smaller, focused components are easier to test, debug, and maintain!**

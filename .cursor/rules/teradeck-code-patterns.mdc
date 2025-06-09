@@ -1,0 +1,228 @@
+# TeraDeck Code Patterns & Conventions
+
+## TypeScript Conventions
+
+### Shared Type System
+All game-related types are centralized in [shared/src/types/game.ts](mdc:shared/src/types/game.ts):
+
+```typescript
+// Modular card types with consistent state management
+interface ModuleCard {
+  id: string;
+  type: 'module';
+  color: ModuleColor | 'multicolor';
+  state: ModuleState;
+  bugs: number;
+  patches: number;
+}
+
+// Consistent naming: State enums with clear progression
+type ModuleState = 'free' | 'bugged' | 'patched' | 'stabilized' | 'collapsed';
+```
+
+### Game State Management Pattern
+Player state follows consistent structure in [shared/src/types/game.ts](mdc:shared/src/types/game.ts):
+
+```typescript
+interface Player {
+  id: string;
+  name: string;
+  modules: ModuleCard[];     // Always max 5 slots
+  hand: Card[];              // Private cards
+  isWinner: boolean;         // Game state tracking
+}
+```
+
+## Frontend Patterns
+
+### Component Structure ([frontend/src/App.tsx](mdc:frontend/src/App.tsx))
+```typescript
+// Functional components with hooks pattern
+const TeraDeckDemo: React.FC = () => {
+  // State management with useState
+  const [player, setPlayer] = useState<Player>({...});
+  const [gameLog, setGameLog] = useState<string[]>([]);
+  
+  // Event handlers with consistent naming
+  const handlePlayCard = (card: Card) => {...};
+  const handleDiscardCard = (cardId: string) => {...};
+  
+  // Early returns for loading states
+  if (loading) return <LoadingSpinner />;
+  
+  return <GameInterface />;
+};
+```
+
+### Style Patterns
+1. **Inline Styles for Complex Animations**: Due to Tailwind compatibility issues
+2. **Color System**: Consistent module colors across UI
+   - Backend: Blue (#3B82F6)
+   - Frontend: Yellow (#EAB308) 
+   - Mobile: Red (#EF4444)
+   - Data Science: Green (#10B981)
+   - Multicolor: Rainbow gradient
+
+3. **State Visual Indicators**:
+   ```typescript
+   const getModuleStateIcon = (state: ModuleState) => {
+     return state === 'free' ? '✅' : 
+            state === 'bugged' ? '🐛' :
+            state === 'patched' ? '🔧' :
+            state === 'stabilized' ? '🛡️' : '💥';
+   };
+   ```
+
+## Backend Patterns
+
+### Service Architecture ([backend/src/services/GameManager.ts](mdc:backend/src/services/GameManager.ts))
+```typescript
+class GameManager {
+  private games: Map<string, GameState> = new Map();
+  
+  // Consistent method naming
+  public createGame(playerId: string): string {...}
+  public joinGame(gameId: string, playerId: string): boolean {...}
+  public playCard(gameId: string, playerId: string, card: Card): boolean {...}
+  
+  // Error handling pattern
+  private validateGameState(gameId: string): GameState | null {
+    const game = this.games.get(gameId);
+    if (!game) {
+      console.error(`Game ${gameId} not found`);
+      return null;
+    }
+    return game;
+  }
+}
+```
+
+### Socket Event Patterns ([backend/src/socket/gameSocket.ts](mdc:backend/src/socket/gameSocket.ts))
+```typescript
+// Consistent event naming: action:entity pattern
+io.on('connection', (socket) => {
+  socket.on('game:create', handleCreateGame);
+  socket.on('game:join', handleJoinGame); 
+  socket.on('card:play', handlePlayCard);
+  socket.on('card:discard', handleDiscardCard);
+  
+  // Error handling with emit pattern
+  socket.emit('error', { message, code });
+  socket.emit('game:updated', gameState);
+});
+```
+
+## Game Logic Patterns
+
+### Card Effect System ([shared/src/game/cardEffects.ts](mdc:shared/src/game/cardEffects.ts))
+```typescript
+// Function-based effects with consistent signatures
+export const cardEffects = {
+  playModule: (player: Player, card: ModuleCard): boolean => {
+    // Find empty slot pattern
+    const emptySlot = player.modules.findIndex(m => !m);
+    if (emptySlot === -1) return false;
+    
+    // State mutation pattern
+    player.modules[emptySlot] = { ...card, state: 'free' };
+    return true;
+  },
+  
+  playBug: (player: Player, targetModule: ModuleCard): boolean => {
+    // State transition validation
+    if (targetModule.state === 'stabilized') return false;
+    
+    // Apply state changes with side effects
+    return applyBugEffect(targetModule);
+  }
+};
+```
+
+### State Validation Pattern
+```typescript
+// Consistent validation with boolean returns
+const canPlayCard = (card: Card, gameState: GameState): boolean => {
+  switch (card.type) {
+    case 'module':
+      return hasEmptyModuleSlot(gameState.currentPlayer);
+    case 'bug':
+      return hasValidTarget(card, gameState.players);
+    case 'patch':
+      return hasValidTarget(card, gameState.players);
+    default:
+      return false;
+  }
+};
+```
+
+## Error Handling Patterns
+
+### Frontend Error Boundaries
+```typescript
+// Try-catch with user feedback
+const handleCardPlay = async (card: Card) => {
+  try {
+    const result = await playCard(card);
+    setGameLog(prev => [...prev, `Played ${card.name}`]);
+  } catch (error) {
+    setGameLog(prev => [...prev, `Error: ${error.message}`]);
+    console.error('Card play failed:', error);
+  }
+};
+```
+
+### Backend Error Response
+```typescript
+// Consistent error object structure
+const sendError = (socket: Socket, message: string, code?: string) => {
+  socket.emit('error', {
+    message,
+    code: code || 'UNKNOWN_ERROR',
+    timestamp: new Date().toISOString()
+  });
+};
+```
+
+## Import/Export Patterns
+
+### Barrel Exports (Index Files)
+```typescript
+// shared/src/index.ts
+export * from './types/game';
+export * from './constants/cards';
+export * from './game/gameLogic';
+
+// Usage: import { Card, TERADECK_CARDS } from '@shared';
+```
+
+### Named vs Default Exports
+- **Named Exports**: For utilities, types, constants
+- **Default Exports**: For React components, main classes
+- **Consistent Pattern**: One default + multiple named per file
+
+## Performance Patterns
+
+### React Optimization
+```typescript
+// Memoization for expensive calculations
+const moduleStats = useMemo(() => 
+  calculateModuleStats(player.modules), [player.modules]);
+
+// Callback memoization to prevent re-renders
+const handleCardPlay = useCallback((card: Card) => {
+  // ... handler logic
+}, [gameState, player]);
+```
+
+### State Updates
+```typescript
+// Immutable updates with spread operator
+setPlayer(prev => ({
+  ...prev,
+  modules: prev.modules.map(module => 
+    module.id === targetId 
+      ? { ...module, state: newState }
+      : module
+  )
+}));
+```

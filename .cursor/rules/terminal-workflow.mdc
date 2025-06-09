@@ -1,0 +1,47 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# Terminal & Directory Workflow
+
+## Critical Directory Rule
+**ALWAYS navigate to the correct project directory first:**
+```bash
+cd /c/work/workspaces/TeraDeck
+```
+
+## Why This Is Critical
+- The bash_profile automatically redirects to a different directory
+- Many commands will fail silently if executed from wrong directory
+- npm workspace commands require being in the root directory
+- File operations need correct relative paths
+
+## Essential Commands Pattern
+Every terminal session should start with:
+```bash
+cd /c/work/workspaces/TeraDeck
+# Then execute your commands
+npm run dev
+# or
+cd frontend && npm install some-package
+# or  
+cd backend && npm run build
+```
+
+## Directory Structure Navigation
+- **Root**: `/c/work/workspaces/TeraDeck` - For workspace commands
+- **Frontend**: `/c/work/workspaces/TeraDeck/frontend` - For frontend-specific tasks
+- **Backend**: `/c/work/workspaces/TeraDeck/backend` - For backend-specific tasks
+- **Shared**: `/c/work/workspaces/TeraDeck/shared` - For shared logic
+
+## Terminal Issues on Windows
+- The terminal may show bash prompt errors (safe to ignore)
+- Some commands may not work due to bash_profile configuration
+- Always verify you're in the correct directory with `pwd`
+- Use full paths when in doubt
+
+## Verification Commands
+- `pwd` - Check current directory
+- `ls` - List contents to confirm location  
+- `cd /c/work/workspaces/TeraDeck && pwd` - Navigate and confirm

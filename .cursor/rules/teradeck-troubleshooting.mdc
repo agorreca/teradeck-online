@@ -1,0 +1,142 @@
+# TeraDeck Troubleshooting Guide
+
+## Development Environment Issues
+
+### Windows Git Bash Navigation
+**Problem**: Commands fail because bash_profile redirects to different directory
+**Solution**: Always start with `cd /c/work/workspaces/TeraDeck` before any commands
+```bash
+cd /c/work/workspaces/TeraDeck  # REQUIRED FIRST STEP
+cd frontend && npm run dev
+```
+
+### TypeScript Module Resolution Errors
+**Problem**: "Unknown file extension .ts" or module resolution failures
+**Root Cause**: ESM/CommonJS configuration mismatch
+
+**Backend Solution** ([backend/tsconfig.json](mdc:backend/tsconfig.json)):
+```json
+{
+  "compilerOptions": {
+    "module": "CommonJS",  // NOT "ESNext"
+    "target": "ES2020"
+  }
+}
+```
+
+**Backend Package** ([backend/package.json](mdc:backend/package.json)):
+```json
+{
+  // Remove "type": "module" for CommonJS
+  "scripts": {
+    "dev": "nodemon -r tsconfig-paths/register src/index.ts"
+  }
+}
+```
+
+### Path Alias Resolution  
+**Problem**: `@shared/*` imports fail
+**Solutions**:
+- **Backend**: Install `tsconfig-paths` and use `-r tsconfig-paths/register`
+- **Frontend**: Configure alias in [frontend/vite.config.ts](mdc:frontend/vite.config.ts)
+```typescript
+export default defineConfig({
+  resolve: {
+    alias: {
+      '@shared': path.resolve(__dirname, '../shared/src'),
+    },
+  },
+});
+```
+
+## PostCSS & Tailwind Issues
+
+### Tailwind v4 PostCSS Plugin Error
+**Problem**: "PostCSS plugin has moved to separate package"
+**Error**: Using `tailwindcss: {}` in [frontend/postcss.config.js](mdc:frontend/postcss.config.js)
+
+**Solution**: Update to use official v4 plugin:
+```bash
+npm install @tailwindcss/postcss
+```
+
+```javascript
+// postcss.config.js
+export default {
+  plugins: {
+    '@tailwindcss/postcss': {},  // NOT 'tailwindcss': {}
+    autoprefixer: {},
+  },
+};
+```
+
+### Missing CSS Styles
+**Problem**: Tailwind classes not working, "se ve muy feo"
+**Solution**: Ensure CSS is imported in [frontend/src/main.tsx](mdc:frontend/src/main.tsx):
+```typescript
+import './styles/index.css';  // Required for Tailwind
+```
+
+## Port & Network Issues
+
+### Port Conflicts
+**Ports Used**:
+- Frontend: `:3000` (Vite default)
+- Backend: `:7777` (custom to avoid conflicts)
+
+**Conflicts Avoided**: `:3001`, `:3002`, `:3003`, `:8080`, `:9000`, `:4000`, `:5555`
+
+**Check Port Usage**:
+```bash
+netstat -an | grep ":3000"
+netstat -an | grep ":7777"
+```
+
+### Frontend 404 Errors
+**Problem**: "No se puede encontrar esta página (localhost)"
+**Common Causes**:
+1. Accessing wrong port (check if running on :3001 instead of :3000)
+2. Missing [frontend/index.html](mdc:frontend/index.html) entry point
+3. Missing [frontend/public/manifest.json](mdc:frontend/public/manifest.json)
+
+**Solution**: Check server output for actual port:
+```
+➜  Local:   http://localhost:3000/
+➜  Network: http://172.20.160.1:3000/
+```
+
+## Import & File Extension Issues
+
+### Incorrect Import Extensions
+**Problem**: `.js` extensions in TypeScript files
+**Wrong**: 
+```typescript
+import { gameLogic } from './gameLogic.js';  // ❌ In .ts file
+```
+
+**Correct**:
+```typescript
+import { gameLogic } from './gameLogic';     // ✅ No extension
+```
+
+**Files Fixed**:
+- [shared/src/game/gameLogic.ts](mdc:shared/src/game/gameLogic.ts)
+- [shared/src/game/cardEffects.ts](mdc:shared/src/game/cardEffects.ts)
+- [shared/src/constants/cards.ts](mdc:shared/src/constants/cards.ts)
+
+### Missing Files
+**Created During Setup**:
+- [frontend/index.html](mdc:frontend/index.html) - React app entry point
+- [frontend/public/manifest.json](mdc:frontend/public/manifest.json) - PWA manifest
+- [backend/src/services/GameManager.ts](mdc:backend/src/services/GameManager.ts) - Game state management
+
+## Quick Diagnostics
+```bash
+# Check if services are running
+ps aux | grep -E "(node|npm|vite)" | grep -v grep
+
+# Restart clean development environment  
+cd /c/work/workspaces/TeraDeck
+cd frontend && npm run dev    # Terminal 1
+cd backend && npm run dev     # Terminal 2
+```

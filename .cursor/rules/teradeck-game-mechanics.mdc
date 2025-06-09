@@ -1,0 +1,79 @@
+# TeraDeck Game Mechanics & Rules
+
+## Core Game Concept
+TeraDeck simula el desarrollo de software donde los jugadores construyen proyectos usando módulos tecnológicos, defendiéndose contra bugs y usando parches para proteger sus sistemas.
+
+## Card System (68 cards total)
+### Módulos (21 cards)
+- **Backend** (azul): 5 cards + 1 multicolor
+- **Frontend** (amarillo): 5 cards  
+- **Mobile** (rojo): 5 cards
+- **Data Science** (verde): 5 cards
+- **Multicolor**: 1 card (comodín para cualquier tipo)
+
+### Bugs (17 cards)  
+- **Por color**: 4 Backend, 4 Frontend, 4 Mobile, 4 Data Science
+- **Multicolor**: 1 card (afecta cualquier color)
+
+### Patches (20 cards)
+- **Por color**: 4 Backend, 4 Frontend, 4 Mobile, 4 Data Science  
+- **Multicolor**: 4 cards (protegen cualquier color)
+
+### Operaciones (10 cards)
+- **Cambio de Arquitecto**: 3 cards - Intercambia módulos entre jugadores
+- **Reclutamiento del Groso**: 3 cards - Roba módulo enemigo (excepto estabilizados)
+- **Phishing Interno**: 2 cards - Propaga bugs a módulos libres
+- **Fiesta de Fin de Año**: 1 card - Todos pierden turno y descartan
+- **Project Swap**: 1 card - Intercambio completo de proyectos
+
+## Module States & Transitions
+```
+FREE (✅) ──bug──> BUGGED (🐛) ──patch──> FREE
+    │                   │
+  patch              2nd bug
+    │                   │  
+    v                   v
+PATCHED (🔧)        COLLAPSED (💥)
+    │                   │
+  2nd patch           remove
+    │                   │
+    v                   v
+STABILIZED (🛡️)     DESTROYED
+```
+
+## Advanced Mechanics
+### Double Card Rules
+- **2 Bugs on same module**: Module COLLAPSES (destroyed)
+- **2 Patches on same module**: Module STABILIZED (immune to bugs/operations)
+- **Bug + Patch**: Cancel each other out, module returns to FREE
+
+### Multicolor Cards
+- **Multicolor modules**: Can substitute any color type
+- **Multicolor bugs**: Can attack any color module/patch
+- **Multicolor patches**: Can protect/cure any color module
+
+### Protection Levels
+1. **FREE**: Vulnerable to bugs
+2. **PATCHED**: Protected against first bug
+3. **STABILIZED**: Immune to all bugs and most operations
+4. **COLLAPSED**: Destroyed, must be removed
+
+## Win Condition
+Player needs **4 functional modules** (not bugged or collapsed) to win. Modules can be any combination of the 4 types (Backend, Frontend, Mobile, Data Science) or include multicolor as wildcard.
+
+## Implementation Files
+- **Types**: [shared/src/types/game.ts](mdc:shared/src/types/game.ts) - All game interfaces
+- **Cards**: [shared/src/constants/cards.ts](mdc:shared/src/constants/cards.ts) - Complete card definitions  
+- **Logic**: [shared/src/game/gameLogic.ts](mdc:shared/src/game/gameLogic.ts) - Game rules engine
+- **Effects**: [shared/src/game/cardEffects.ts](mdc:shared/src/game/cardEffects.ts) - Card effect implementations
+- **Demo**: [frontend/src/App.tsx](mdc:frontend/src/App.tsx) - Interactive demo with all mechanics
+
+## Key Interfaces
+```typescript
+interface ModuleCard {
+  state: 'free' | 'bugged' | 'patched' | 'stabilized' | 'collapsed';
+  bugs: number;      // Count of bugs applied
+  patches: number;   // Count of patches applied
+  color: ModuleColor | 'multicolor';
+}
+```

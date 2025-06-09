@@ -1,0 +1,33 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# TeraDeck Project Structure Guide
+
+## Overview
+TeraDeck is a modern full-stack TypeScript application implementing the "Virus!" card game. The project uses a monorepo structure with shared types and game logic.
+
+## Workspace Structure
+- **frontend/**: React 18 + TypeScript + Vite + PWA
+- **backend/**: Node.js + Express + Socket.IO + TypeScript  
+- **shared/**: Common types, game logic, and constants
+- **docs/**: Multilingual documentation (Spanish/English)
+
+## Key Files
+- [package.json](mdc:package.json) - Root workspace configuration
+- [frontend/package.json](mdc:frontend/package.json) - Frontend dependencies
+- [backend/package.json](mdc:backend/package.json) - Backend dependencies
+- [shared/src/types/game.ts](mdc:shared/src/types/game.ts) - Core game type definitions
+- [shared/src/game/gameLogic.ts](mdc:shared/src/game/gameLogic.ts) - Main game processor
+- [shared/src/game/cardEffects.ts](mdc:shared/src/game/cardEffects.ts) - Card effect implementations
+
+## Development Commands
+- `npm run dev` - Start both frontend and backend
+- `npm run dev:frontend` - Frontend only (port 3000)
+- `npm run dev:backend` - Backend only (port 7777)
+
+## Modern Libraries Used
+- **Frontend**: Tailwind CSS, react-i18next, Framer Motion, Radix UI
+- **Backend**: Express, Socket.IO, UUID
+- **Shared**: TypeScript strict mode, comprehensive type safety

@@ -1,0 +1,71 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# Internationalization Rules
+
+## All Text Must Be Internationalized
+
+**CRITICAL**: Every user-facing text in the application MUST be internationalized using the i18next system.
+
+### ❌ NEVER hardcode text like this:
+```typescript
+<h3>Selecciona el primer módulo para intercambiar</h3>
+<p>No tienes bugs para transferir</p>
+<button>Ejecutar Operación</button>
+```
+
+### ✅ ALWAYS use translation keys:
+```typescript
+<h3>{t('operations.selectFirstModule')}</h3>
+<p>{t('operations.noBugsToTransfer')}</p>
+<button>{t('operations.executeOperation')}</button>
+```
+
+## Code Comments Exception
+All code comments must be in **simple English** as specified in user rules:
+```typescript
+// Player hand management
+// Validate if card can be played before execution
+// Update game state after AI turn
+```
+
+## Translation System Structure
+
+### Main translation files:
+- [frontend/src/i18n/locales/es.json](mdc:frontend/src/i18n/locales/es.json) - Spanish (general)
+- [frontend/src/i18n/locales/es-AR.json](mdc:frontend/src/i18n/locales/es-AR.json) - Argentina (uses "vos")
+- [frontend/src/i18n/locales/es-ES.json](mdc:frontend/src/i18n/locales/es-ES.json) - Spain (uses "tú")
+- [frontend/src/i18n/locales/es-MX.json](mdc:frontend/src/i18n/locales/es-MX.json) - Mexico (uses "Crack")
+- [frontend/src/i18n/locales/en.json](mdc:frontend/src/i18n/locales/en.json) - English (US)
+- [frontend/src/i18n/locales/en-GB.json](mdc:frontend/src/i18n/locales/en-GB.json) - English (UK)
+
+### When adding new text:
+1. Add the translation key to ALL language files
+2. Use descriptive, hierarchical keys: `section.subsection.key`
+3. Include regional variations where appropriate
+4. Test with different languages to ensure UI layout works
+
+### Components that commonly need translation:
+- Modal titles and descriptions
+- Button labels
+- Error messages
+- Game status messages
+- Operation instructions
+- Card names and descriptions
+
+### Current translation sections:
+- `game.*` - Game mechanics and UI
+- `cards.*` - Card-related text
+- `operations.*` - Operation card instructions
+- `settings.*` - Settings and configuration
+- `landing.*` - Landing page
+- `ai.*` - AI difficulty and options
+
+## Validation
+Before committing, verify:
+- [ ] No hardcoded Spanish/English text in components
+- [ ] All new keys exist in ALL language files
+- [ ] UI layout works with longer/shorter translations
+- [ ] Regional variants are appropriate

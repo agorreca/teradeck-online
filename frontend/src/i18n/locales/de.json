@@ -1,0 +1,96 @@
+{
+  "landing": {
+    "title": "TeraDeck Online",
+    "subtitle": "Das Kartenspiel für Entwickler",
+    "playWithFriends": "Mit Freunden Spielen",
+    "playOnline": "Online Spielen",
+    "playWithAI": "Gegen KI Spielen",
+    "tutorial": "Tutorial",
+    "settings": "Einstellungen"
+  },
+  "game": {
+    "yourProject": "Ihr Projekt",
+    "progress": "Fortschritt",
+    "otherPlayers": "Andere Spieler",
+    "maxModules": "Maximum von 8 Modulen erreicht",
+    "alreadyHasModule": "Sie haben bereits ein {{color}} Modul",
+    "noValidTargets": "Keine gültigen Ziele verfügbar",
+    "noValidModulesForBug": "Keine gültigen Module zum Buggen",
+    "noValidModulesForPatch": "Keine gültigen Module zum Patchen",
+    "gameStarted": "Spiel gestartet!",
+    "yourTurn": "Ihr Zug",
+    "aiTurn": "KI-Zug...",
+    "cantPlay": "Kann nicht spielen",
+    "aiPlayed": "KI spielte: {{card}}",
+    "aiDiscarded": "KI verwarf {{count}} Karte(n) (konnte nicht spielen)",
+    "played": "Gespielt: {{card}}",
+    "youWon": "SIE HABEN GEWONNEN!",
+    "selectCardsToDiscard": "Karten zum Verwerfen auswählen",
+    "confirmDiscard": "Verwerfen bestätigen",
+    "cancel": "Abbrechen",
+    "selectTarget": "Ziel Auswählen",
+    "availableModules": "Verfügbare Module:",
+    "yours": "Ihres",
+    "opponent": "Gegner",
+    "opponentDetails": "Gegner Details",
+    "modules": "Module:",
+    "noModules": "Dieser Gegner hat keine Module",
+    "close": "Schließen",
+    "playModulesToBuild": "Spielen Sie Modulkarten um Ihr Projekt zu bauen...",
+    "noModulesYet": "Keine Module",
+    "startingGameWith": "Spiel gestartet mit {{count}} Gegner(n)! Sie sind dran.",
+    "startingVsAI": "Starte Match gegen {{count}} {{difficulty}} KI!"
+  },
+  "cards": {
+    "types": {
+      "module": "Modul",
+      "bug": "Bug",
+      "patch": "Patch",
+      "operation": "Operation"
+    },
+    "colors": {
+      "backend": "Backend",
+      "frontend": "Frontend",
+      "mobile": "Mobile",
+      "dataScience": "Data Science",
+      "multicolor": "Mehrfarbig"
+    },
+    "states": {
+      "free": "Frei",
+      "bugged": "Fehlerhaft",
+      "patched": "Gepatcht",
+      "stabilized": "Stabilisiert",
+      "collapsed": "Kollabiert"
+    }
+  },
+  "settings": {
+    "title": "Einstellungen",
+    "language": "Sprache",
+    "spanish": "Spanisch",
+    "english": "Englisch",
+    "french": "Französisch",
+    "portuguese": "Portugiesisch",
+    "italian": "Italienisch",
+    "german": "Deutsch",
+    "back": "Zurück"
+  },
+  "ai": {
+    "easy": "Einfach",
+    "normal": "Normal",
+    "hard": "Schwer",
+    "selectOpponents": "Anzahl Gegner auswählen (1-3):",
+    "selectDifficulty": "Schwierigkeit auswählen:\n1 - Einfach (zufällige Züge)\n2 - Normal (ausgewogene Strategie)\n3 - Schwer (erweiterte Strategie)"
+  },
+  "operations": {
+    "architectChange": "Architekt Wechsel",
+    "recruitAce": "Ass Rekrutierung",
+    "internalPhishing": "Internes Phishing",
+    "yearEndParty": "Jahresendfeier",
+    "projectSwap": "Projekt Tausch",
+    "selectModuleToSteal": "Wählen Sie ein Modul zum Stehlen:",
+    "selectYourModule": "Wählen Sie eines Ihrer Module:",
+    "selectOpponentModule": "Wählen Sie ein Gegner-Modul:",
+    "noValidModulesToSteal": "Keine gültigen Module zum Stehlen",
+    "noModulesForExchange": "Keine Module zum Austauschen"
+  }
+}

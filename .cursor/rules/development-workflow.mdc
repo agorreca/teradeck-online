@@ -1,0 +1,52 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# Development Workflow & Troubleshooting
+
+## Starting Development
+Always start from the project root:
+```bash
+npm run dev  # Starts both frontend and backend
+```
+
+## Port Configuration
+- **Frontend**: Auto-detects available port (usually 3000 or 3001)
+- **Backend**: Configured to port 7777 in [backend/src/index.ts](mdc:backend/src/index.ts)
+- **Proxy**: Frontend proxies `/api` and `/socket.io` to backend
+
+## Common Development Issues
+
+### TypeScript Compilation Errors
+- **"Unknown file extension .ts"**: Backend should use CommonJS (no `"type": "module"`)
+- **"Cannot find module @shared"**: Check tsconfig-paths is installed and registered
+- **Import/export errors**: Never use `.js` extensions in TypeScript imports
+
+### Port Conflicts
+- Use `netstat -an | grep :PORT` to check if port is in use
+- Backend port can be changed in [backend/src/index.ts](mdc:backend/src/index.ts)
+- Frontend proxy must match backend port in [frontend/vite.config.ts](mdc:frontend/vite.config.ts)
+
+### Module Resolution
+- **Backend**: Uses `tsconfig-paths/register` for @shared imports
+- **Frontend**: Uses Vite's alias resolution
+- **Shared types**: Must be properly exported from [shared/src/types/game.ts](mdc:shared/src/types/game.ts)
+
+## Code Quality Rules
+- Use TypeScript strict mode (already configured)
+- Prefix unused parameters with `_` (e.g., `_req`, `_next`)
+- Follow import order: external libs, @shared, relative imports
+- Use proper error handling in Socket.IO events
+
+## Testing Workflow
+1. Verify both services start without errors
+2. Check frontend loads at http://localhost:3000
+3. Test backend API at http://localhost:7777/api/health
+4. Verify Socket.IO connection between frontend and backend
+
+## Documentation
+- **Spanish docs**: [docs/es/](mdc:docs/es/) directory
+- **English docs**: [docs/en/](mdc:docs/en/) directory  
+- **Architecture**: [docs/ARCHITECTURE.md](mdc:docs/ARCHITECTURE.md)
+- **API Reference**: [docs/API.md](mdc:docs/API.md)

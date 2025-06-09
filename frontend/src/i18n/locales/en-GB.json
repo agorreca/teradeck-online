@@ -1,0 +1,105 @@
+{
+  "landing": {
+    "title": "TeraDeck Online",
+    "subtitle": "The card game for developers",
+    "playWithFriends": "Play with Mates",
+    "playOnline": "Play Online",
+    "playWithAI": "Play against AI",
+    "tutorial": "Tutorial",
+    "settings": "Settings"
+  },
+  "game": {
+    "yourProject": "Your Project",
+    "progress": "Progress",
+    "otherPlayers": "Other Players",
+    "you": "You",
+    "opponent1": "Opponent 1",
+    "opponent2": "Opponent 2",
+    "player": "Player",
+    "maxModules": "Maximum 8 modules reached",
+    "alreadyHasModule": "You already have a {{color}} module",
+    "noValidTargets": "No valid targets available",
+    "noValidModulesForBug": "No valid modules to bug",
+    "noValidModulesForPatch": "No valid modules to patch",
+    "gameStarted": "Game started!",
+    "yourTurn": "Your turn",
+    "aiTurn": "AI turn...",
+    "cantPlay": "Cannot play",
+    "aiPlayed": "AI played: {{card}}",
+    "aiDiscarded": "AI discarded {{count}} card(s) (couldn't play)",
+    "played": "Played: {{card}}",
+    "youWon": "YOU WON!",
+    "selectCardsToDiscard": "Select cards to discard",
+    "confirmDiscard": "Confirm discard",
+    "cancel": "Cancel",
+    "selectTarget": "Select Target",
+    "availableModules": "Available modules:",
+    "yours": "Yours",
+    "opponent": "Opponent",
+    "opponentDetails": "Opponent Details",
+    "modules": "Modules:",
+    "noModules": "This opponent has no modules",
+    "close": "Close",
+    "playModulesToBuild": "Play module cards to build your project...",
+    "noModulesYet": "No modules",
+    "startingGameWith": "Game started with {{count}} opponent(s)! It's your turn.",
+    "startingVsAI": "Starting match against {{count}} {{difficulty}} AI!"
+  },
+  "cards": {
+    "types": {
+      "module": "Module",
+      "bug": "Bug",
+      "patch": "Patch",
+      "operation": "Operation"
+    },
+    "colors": {
+      "backend": "Backend",
+      "frontend": "Frontend",
+      "mobile": "Mobile",
+      "dataScience": "Data Science",
+      "multicolor": "Multicolour"
+    },
+    "states": {
+      "free": "Free",
+      "bugged": "Bugged",
+      "patched": "Patched",
+      "stabilized": "Stabilised",
+      "collapsed": "Collapsed"
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "language": "Language",
+    "spanish": "Spanish",
+    "spanishAR": "Spanish (Argentina)",
+    "spanishES": "Spanish (Spain)",
+    "spanishMX": "Spanish (Mexico)",
+    "english": "English",
+    "englishUS": "English (United States)",
+    "englishUK": "English (United Kingdom)",
+    "french": "French",
+    "portuguese": "Portuguese",
+    "italian": "Italian",
+    "german": "German",
+    "back": "Back"
+  },
+  "ai": {
+    "easy": "Easy",
+    "normal": "Normal",
+    "hard": "Hard",
+    "selectOpponents": "Select number of opponents (1-3):",
+    "selectDifficulty": "Select difficulty:\n1 - Easy (random moves)\n2 - Normal (balanced strategy)\n3 - Hard (advanced strategy)"
+  },
+  "operations": {
+    "architectChange": "Architect Change",
+    "recruitAce": "Recruit Ace",
+    "internalPhishing": "Internal Phishing",
+    "yearEndParty": "Year End Party",
+    "projectSwap": "Project Swap",
+    "selectModuleToSteal": "Select which module to pinch:",
+    "selectYourModule": "Select one of your modules:",
+    "selectOpponentModule": "Select an opponent's module:",
+    "noValidModulesToSteal": "No valid modules to steal",
+    "noModulesForExchange": "No modules for exchange"
+  }
+}

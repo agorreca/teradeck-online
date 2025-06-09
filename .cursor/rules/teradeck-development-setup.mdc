@@ -1,0 +1,50 @@
+# TeraDeck Development Setup
+
+## Development Environment
+- **Node.js**: Version 16+ required
+- **Package Manager**: npm (lockfile: [package-lock.json](mdc:package-lock.json))
+- **TypeScript**: Configured for both frontend and backend
+- **Development Ports**: Frontend :3000, Backend :7777
+
+## Key Configuration Files
+- [frontend/vite.config.ts](mdc:frontend/vite.config.ts) - Vite + React + Tailwind setup
+- [frontend/tailwind.config.js](mdc:frontend/tailwind.config.js) - TeraDeck custom theme
+- [frontend/postcss.config.js](mdc:frontend/postcss.config.js) - PostCSS + Tailwind v4 config
+- [backend/tsconfig.json](mdc:backend/tsconfig.json) - TypeScript CommonJS config
+- [shared/src/types/](mdc:shared/src/types/) - Shared type definitions
+
+## Development Commands
+```bash
+# Frontend development
+cd frontend && npm run dev          # Starts Vite dev server on :3000
+
+# Backend development  
+cd backend && npm run dev           # Starts Express server on :7777
+
+# Full stack (run both)
+npm run dev                         # Root package.json script
+```
+
+## Critical Setup Notes
+⚠️ **Navigation Required**: Always run `cd /c/work/workspaces/TeraDeck` first in Windows Git Bash
+⚠️ **Tailwind v4**: Uses `@tailwindcss/postcss` plugin, not direct `tailwindcss`
+⚠️ **Module System**: Backend uses CommonJS, Frontend uses ESM
+⚠️ **Path Aliases**: `@shared/*` resolves to `../shared/src/*`
+
+## Common Issues & Solutions
+1. **"Unknown file extension .ts"**: Ensure backend uses CommonJS in tsconfig.json
+2. **Tailwind PostCSS errors**: Use `@tailwindcss/postcss` not `tailwindcss` directly
+3. **Path alias failures**: Check tsconfig-paths is installed for backend
+4. **Port conflicts**: Backend runs on :7777 (not :3001/3002/8080/etc)
+
+## File Structure Dependencies
+- [frontend/src/main.tsx](mdc:frontend/src/main.tsx) - React entry point
+- [frontend/src/styles/index.css](mdc:frontend/src/styles/index.css) - Tailwind base styles
+- [backend/src/index.ts](mdc:backend/src/index.ts) - Express server entry
+- [shared/src/](mdc:shared/src/) - Shared game logic and types
+
+## Build & Deployment
+```bash
+cd frontend && npm run build        # Production build
+cd backend && npm run build         # TypeScript compilation
+```

@@ -1,0 +1,96 @@
+{
+  "landing": {
+    "title": "TeraDeck Online",
+    "subtitle": "Il gioco di carte per sviluppatori",
+    "playWithFriends": "Gioca con Amici",
+    "playOnline": "Gioca Online",
+    "playWithAI": "Gioca contro IA",
+    "tutorial": "Tutorial",
+    "settings": "Impostazioni"
+  },
+  "game": {
+    "yourProject": "Il Tuo Progetto",
+    "progress": "Progresso",
+    "otherPlayers": "Altri Giocatori",
+    "maxModules": "Massimo 8 moduli raggiunto",
+    "alreadyHasModule": "Hai già un modulo {{color}}",
+    "noValidTargets": "Nessun bersaglio valido disponibile",
+    "noValidModulesForBug": "Nessun modulo valido da buggare",
+    "noValidModulesForPatch": "Nessun modulo valido da correggere",
+    "gameStarted": "Gioco iniziato!",
+    "yourTurn": "Il tuo turno",
+    "aiTurn": "Turno dell'IA...",
+    "cantPlay": "Impossibile giocare",
+    "aiPlayed": "L'IA ha giocato: {{card}}",
+    "aiDiscarded": "L'IA ha scartato {{count}} carta/e (non poteva giocare)",
+    "played": "Giocato: {{card}}",
+    "youWon": "HAI VINTO!",
+    "selectCardsToDiscard": "Seleziona carte da scartare",
+    "confirmDiscard": "Conferma scarto",
+    "cancel": "Annulla",
+    "selectTarget": "Seleziona Bersaglio",
+    "availableModules": "Moduli disponibili:",
+    "yours": "Tuo",
+    "opponent": "Avversario",
+    "opponentDetails": "Dettagli Avversario",
+    "modules": "Moduli:",
+    "noModules": "Questo avversario non ha moduli",
+    "close": "Chiudi",
+    "playModulesToBuild": "Gioca carte modulo per costruire il tuo progetto...",
+    "noModulesYet": "Nessun modulo",
+    "startingGameWith": "Gioco iniziato con {{count}} avversario/i! È il tuo turno.",
+    "startingVsAI": "Iniziando partita contro {{count}} IA {{difficulty}}!"
+  },
+  "cards": {
+    "types": {
+      "module": "Modulo",
+      "bug": "Bug",
+      "patch": "Patch",
+      "operation": "Operazione"
+    },
+    "colors": {
+      "backend": "Backend",
+      "frontend": "Frontend",
+      "mobile": "Mobile",
+      "dataScience": "Data Science",
+      "multicolor": "Multicolore"
+    },
+    "states": {
+      "free": "Libero",
+      "bugged": "Buggato",
+      "patched": "Corretto",
+      "stabilized": "Stabilizzato",
+      "collapsed": "Collassato"
+    }
+  },
+  "settings": {
+    "title": "Impostazioni",
+    "language": "Lingua",
+    "spanish": "Spagnolo",
+    "english": "Inglese",
+    "french": "Francese",
+    "portuguese": "Portoghese",
+    "italian": "Italiano",
+    "german": "Tedesco",
+    "back": "Indietro"
+  },
+  "ai": {
+    "easy": "Facile",
+    "normal": "Normale",
+    "hard": "Difficile",
+    "selectOpponents": "Seleziona numero di avversari (1-3):",
+    "selectDifficulty": "Seleziona difficoltà:\n1 - Facile (mosse casuali)\n2 - Normale (strategia bilanciata)\n3 - Difficile (strategia avanzata)"
+  },
+  "operations": {
+    "architectChange": "Cambio di Architetto",
+    "recruitAce": "Reclutamento dell'Asso",
+    "internalPhishing": "Phishing Interno",
+    "yearEndParty": "Festa di Fine Anno",
+    "projectSwap": "Scambio Progetto",
+    "selectModuleToSteal": "Seleziona quale modulo rubare:",
+    "selectYourModule": "Seleziona uno dei tuoi moduli:",
+    "selectOpponentModule": "Seleziona un modulo dell'avversario:",
+    "noValidModulesToSteal": "Nessun modulo valido da rubare",
+    "noModulesForExchange": "Nessun modulo per lo scambio"
+  }
+}
