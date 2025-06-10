@@ -727,18 +727,15 @@ export class GameManager {
 
     for (const p of gameState.players) {
       if (p.id !== player.id) {
-        // Count cards before discarding
-        const cardsDiscarded = p.hand.length;
-
         // Discard all cards
         gameState.discardPile.push(...p.hand);
         p.hand = [];
 
-        // Mark as skipping next turn
+        // Mark as skipping next turn (this would need to be implemented in nextTurn logic)
         p.skippedTurns = (p.skippedTurns || 0) + 1;
 
         console.log(
-          `🎉 End Year Party: ${p.nickname} discarded ${cardsDiscarded} cards and will skip next turn`
+          `🎉 End Year Party: ${p.nickname} discarded ${p.hand.length} cards and will skip next turn`
         );
       }
     }

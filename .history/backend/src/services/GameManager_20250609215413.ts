@@ -727,18 +727,15 @@ export class GameManager {
 
     for (const p of gameState.players) {
       if (p.id !== player.id) {
-        // Count cards before discarding
-        const cardsDiscarded = p.hand.length;
-
         // Discard all cards
         gameState.discardPile.push(...p.hand);
         p.hand = [];
 
-        // Mark as skipping next turn
+        // Mark as skipping next turn (this would need to be implemented in nextTurn logic)
         p.skippedTurns = (p.skippedTurns || 0) + 1;
 
         console.log(
-          `🎉 End Year Party: ${p.nickname} discarded ${cardsDiscarded} cards and will skip next turn`
+          `🎉 End Year Party: ${p.nickname} discarded ${p.hand.length} cards and will skip next turn`
         );
       }
     }
@@ -789,32 +786,10 @@ export class GameManager {
     gameState.currentPlayerIndex =
       (gameState.currentPlayerIndex + 1) % gameState.players.length;
 
-    const currentPlayer = gameState.players[gameState.currentPlayerIndex];
-
-    // Check if player should skip turn (from End Year Party)
-    if (currentPlayer && currentPlayer.skippedTurns > 0) {
-      currentPlayer.skippedTurns--;
-      console.log(
-        `⏭️ ${currentPlayer.nickname} skips turn (${currentPlayer.skippedTurns} skips remaining)`
-      );
-      this.nextTurn(gameState); // Recursively call to skip this turn
-      return;
-    }
-
-    // Draw cards for the new current player to have 3 cards
-    if (currentPlayer && currentPlayer.hand.length < 3) {
-      const cardsToDraw = 3 - currentPlayer.hand.length;
-      for (let i = 0; i < cardsToDraw && gameState.deck.length > 0; i++) {
-        const drawnCard = gameState.deck.pop()!;
-        currentPlayer.hand.push(drawnCard);
-      }
-    }
-
-    // Skip AI turns for now (basic implementation) - unless it's manual AI control
-    if (currentPlayer?.isAI) {
-      // Simple AI: skip turn for now (this would be handled by AI service in full implementation)
+    // Skip AI turns for now (basic implementation)
+    if (gameState.players[gameState.currentPlayerIndex]?.isAI) {
+      // Simple AI: skip turn for now
       this.nextTurn(gameState);
-      return;
     }
 
     if (gameState.currentPlayerIndex === 0) {

@@ -729,7 +729,7 @@ export class GameManager {
       if (p.id !== player.id) {
         // Count cards before discarding
         const cardsDiscarded = p.hand.length;
-
+        
         // Discard all cards
         gameState.discardPile.push(...p.hand);
         p.hand = [];

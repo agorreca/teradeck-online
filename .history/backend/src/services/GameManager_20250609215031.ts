@@ -277,58 +277,6 @@ export class GameManager {
     this.nextTurn(gameState);
   }
 
-  private processDiscardAction(gameState: GameState, action: GameAction): void {
-    const actionData = action.data as any; // DiscardCardsActionData
-    const cardsToDiscard = actionData.cards || actionData.cardIds;
-    const player = gameState.players.find(p => p.id === action.playerId);
-
-    if (!player) {
-      throw new Error('Player not found');
-    }
-
-    if (!cardsToDiscard || cardsToDiscard.length === 0) {
-      throw new Error('No cards specified for discard');
-    }
-
-    if (cardsToDiscard.length < 1 || cardsToDiscard.length > 3) {
-      throw new Error('Must discard between 1 and 3 cards');
-    }
-
-    // Remove cards from player's hand and add to discard pile
-    const discardedCards: Card[] = [];
-
-    for (const cardData of cardsToDiscard) {
-      const cardId = typeof cardData === 'string' ? cardData : cardData.id;
-      const cardIndex = player.hand.findIndex(c => c.id === cardId);
-
-      if (cardIndex === -1) {
-        throw new Error(`Card ${cardId} not found in hand`);
-      }
-
-      const discardedCard = player.hand.splice(cardIndex, 1)[0];
-      discardedCards.push(discardedCard);
-    }
-
-    // Add discarded cards to the discard pile (last card on top)
-    gameState.discardPile.push(...discardedCards);
-
-    // Draw replacement cards from deck
-    const cardsToDraw = Math.min(discardedCards.length, gameState.deck.length);
-    for (let i = 0; i < cardsToDraw; i++) {
-      if (gameState.deck.length > 0) {
-        const drawnCard = gameState.deck.pop()!;
-        player.hand.push(drawnCard);
-      }
-    }
-
-    console.log(
-      `Player ${player.nickname} discarded ${discardedCards.length} cards and drew ${cardsToDraw} replacement cards`
-    );
-
-    // Move to next player
-    this.nextTurn(gameState);
-  }
-
   private playModule(
     _gameState: GameState,
     player: Player,
@@ -385,14 +333,12 @@ export class GameManager {
       throw new Error('Cannot target stabilized module');
     }
 
-    // Check color compatibility - multicolor bugs can target any module, any module can be targeted by multicolor bugs
-    const isBugMulticolor =
-      bugCard.color === 'multicolor' ||
-      bugCard.color === ModuleColor.MULTICOLOR;
-    const isModuleMulticolor = targetModule.color === ModuleColor.MULTICOLOR;
-    const colorsMatch = bugCard.color === targetModule.color;
-
-    if (!isBugMulticolor && !isModuleMulticolor && !colorsMatch) {
+    // Check color compatibility
+    if (
+      bugCard.color !== ModuleColor.MULTICOLOR &&
+      targetModule.color !== ModuleColor.MULTICOLOR &&
+      bugCard.color !== targetModule.color
+    ) {
       throw new Error('Bug color does not match module color');
     }
 
@@ -455,23 +401,24 @@ export class GameManager {
     }
 
     // Check if targeting stabilized module
-    if (
-      targetModule.state === ModuleState.STABILIZED ||
-      targetModule.isStabilized
-    ) {
+    if (targetModule.isStabilized) {
       throw new Error('Cannot target stabilized module');
     }
 
-    // Patches can be applied to ANY module (own or others'), unlike the comment above
+    // Check if patch is being applied to own modules only
+    const isOwnModule = player.modules.some(
+      m => m.id === actionData.targetModuleId
+    );
+    if (!isOwnModule) {
+      throw new Error('Can only apply patches to own modules');
+    }
 
-    // Check color compatibility - multicolor patches can target any module, any module can be targeted by multicolor patches
-    const isPatchMulticolor =
-      patchCard.color === 'multicolor' ||
-      patchCard.color === ModuleColor.MULTICOLOR;
-    const isModuleMulticolor = targetModule.color === ModuleColor.MULTICOLOR;
-    const colorsMatch = patchCard.color === targetModule.color;
-
-    if (!isPatchMulticolor && !isModuleMulticolor && !colorsMatch) {
+    // Check color compatibility
+    if (
+      patchCard.color !== ModuleColor.MULTICOLOR &&
+      targetModule.color !== ModuleColor.MULTICOLOR &&
+      patchCard.color !== targetModule.color
+    ) {
       throw new Error('Patch color does not match module color');
     }
 
@@ -497,324 +444,23 @@ export class GameManager {
   }
 
   private playOperation(
-    gameState: GameState,
-    player: Player,
+    _gameState: GameState,
+    _player: Player,
     operationCard: Card,
-    actionData: PlayCardActionData
+    _actionData: PlayCardActionData
   ): void {
-    const operationEffect = (operationCard as any).effect;
-
-    console.log(`🎮 Playing operation: ${operationEffect}`);
-
-    switch (operationEffect) {
-      case 'architect_change':
-        this.executeArchitectChange(gameState, player, actionData);
-        break;
-
-      case 'recruit_ace':
-        this.executeRecruitAce(gameState, player, actionData);
-        break;
-
-      case 'internal_phishing':
-        this.executeInternalPhishing(gameState, player, actionData);
-        break;
-
-      case 'end_year_party':
-        this.executeEndYearParty(gameState, player);
-        break;
-
-      case 'project_swap':
-        this.executeProjectSwap(gameState, player, actionData);
-        break;
-
-      default:
-        console.log(`⚠️ Unknown operation effect: ${operationEffect}`);
-        break;
-    }
-  }
-
-  // Operation implementations
-  private executeArchitectChange(
-    gameState: GameState,
-    player: Player,
-    actionData: PlayCardActionData
-  ): void {
-    // Architect Change: Exchange modules between two players
-    // actionData should have swapPlayerIds[0] and swapPlayerIds[1] for the two players
-    // and swapModuleIds[0] and swapModuleIds[1] for the modules to swap
-
-    if (!actionData.swapPlayerIds || actionData.swapPlayerIds.length !== 2) {
-      throw new Error('Architect Change requires exactly 2 players');
-    }
-
-    if (!actionData.swapModuleIds || actionData.swapModuleIds.length !== 2) {
-      throw new Error('Architect Change requires exactly 2 modules');
-    }
-
-    const player1 = gameState.players.find(
-      p => p.id === actionData.swapPlayerIds![0]
-    );
-    const player2 = gameState.players.find(
-      p => p.id === actionData.swapPlayerIds![1]
-    );
-
-    if (!player1 || !player2) {
-      throw new Error('Players not found for Architect Change');
-    }
-
-    const module1Index = player1.modules.findIndex(
-      m => m.id === actionData.swapModuleIds![0]
-    );
-    const module2Index = player2.modules.findIndex(
-      m => m.id === actionData.swapModuleIds![1]
-    );
-
-    if (module1Index === -1 || module2Index === -1) {
-      throw new Error('Modules not found for Architect Change');
-    }
-
-    const module1 = player1.modules[module1Index];
-    const module2 = player2.modules[module2Index];
-
-    // Check that after swap, no player has duplicate colors
-    const tempPlayer1Modules = [...player1.modules];
-    const tempPlayer2Modules = [...player2.modules];
-    tempPlayer1Modules[module1Index] = module2;
-    tempPlayer2Modules[module2Index] = module1;
-
-    // Validate no duplicates (except multicolor)
-    if (
-      this.hasDuplicateModuleColors(tempPlayer1Modules) ||
-      this.hasDuplicateModuleColors(tempPlayer2Modules)
-    ) {
-      throw new Error('Cannot swap: would create duplicate module colors');
-    }
-
-    // Perform the swap
-    player1.modules[module1Index] = module2;
-    player2.modules[module2Index] = module1;
-
-    console.log(
-      `🔄 Architect Change: Swapped ${module1.name.es} (${player1.nickname}) with ${module2.name.es} (${player2.nickname})`
-    );
-  }
-
-  private executeRecruitAce(
-    gameState: GameState,
-    player: Player,
-    actionData: PlayCardActionData
-  ): void {
-    // Recruit Ace: Steal a non-stabilized module from another player
-
-    if (!actionData.targetPlayerId || !actionData.targetModuleId) {
-      throw new Error('Recruit Ace requires target player and module');
-    }
-
-    const targetPlayer = gameState.players.find(
-      p => p.id === actionData.targetPlayerId
-    );
-    if (!targetPlayer || targetPlayer.id === player.id) {
-      throw new Error('Invalid target player for Recruit Ace');
-    }
-
-    const moduleIndex = targetPlayer.modules.findIndex(
-      m => m.id === actionData.targetModuleId
-    );
-    if (moduleIndex === -1) {
-      throw new Error('Target module not found');
-    }
-
-    const targetModule = targetPlayer.modules[moduleIndex];
-
-    // Cannot steal stabilized modules
-    if (
-      targetModule.state === ModuleState.STABILIZED ||
-      targetModule.isStabilized
-    ) {
-      throw new Error('Cannot steal stabilized modules');
-    }
-
-    // Check that current player doesn't already have this color (unless multicolor)
-    if (
-      targetModule.color !== ModuleColor.MULTICOLOR &&
-      player.modules.some(m => m.color === targetModule.color)
-    ) {
-      throw new Error('Already have this module color');
-    }
-
-    // Steal the module
-    const stolenModule = targetPlayer.modules.splice(moduleIndex, 1)[0];
-    player.modules.push(stolenModule);
-
-    console.log(
-      `💎 Recruit Ace: ${player.nickname} stole ${stolenModule.name.es} from ${targetPlayer.nickname}`
-    );
-  }
-
-  private executeInternalPhishing(
-    gameState: GameState,
-    player: Player,
-    actionData: PlayCardActionData
-  ): void {
-    // Internal Phishing: Move all your bugs to other players' free modules
-
-    const playerBuggedModules = player.modules.filter(
-      m => m.state === ModuleState.BUGGED
-    );
-
-    if (playerBuggedModules.length === 0) {
-      console.log(
-        `📧 Internal Phishing: ${player.nickname} has no bugs to transfer`
-      );
-      return;
-    }
-
-    // actionData.bugTransfers should contain array of {playerId, moduleId} for where to move each bug
-    const bugTransfers = actionData.bugTransfers || [];
-
-    let bugsTransferred = 0;
-
-    for (const buggedModule of playerBuggedModules) {
-      for (const bug of [...buggedModule.bugs]) {
-        // Copy array to avoid modification during iteration
-        // Find a target for this bug
-        const transfer = bugTransfers.find(t =>
-          gameState.players
-            .find(p => p.id === t.playerId)
-            ?.modules.find(
-              m =>
-                m.id === t.moduleId &&
-                m.state === ModuleState.FREE &&
-                (bug.color === 'multicolor' ||
-                  bug.color === ModuleColor.MULTICOLOR ||
-                  m.color === ModuleColor.MULTICOLOR ||
-                  bug.color === m.color)
-            )
-        );
-
-        if (transfer) {
-          const targetPlayer = gameState.players.find(
-            p => p.id === transfer.playerId
-          )!;
-          const targetModule = targetPlayer.modules.find(
-            m => m.id === transfer.moduleId
-          )!;
-
-          // Move the bug
-          const bugIndex = buggedModule.bugs.indexOf(bug);
-          if (bugIndex !== -1) {
-            buggedModule.bugs.splice(bugIndex, 1);
-            targetModule.bugs.push(bug);
-            targetModule.state = ModuleState.BUGGED;
-            bugsTransferred++;
-          }
-        }
-      }
-
-      // Update module state if no more bugs
-      if (buggedModule.bugs.length === 0) {
-        buggedModule.state = ModuleState.FREE;
-      }
-    }
-
-    console.log(
-      `📧 Internal Phishing: ${player.nickname} transferred ${bugsTransferred} bugs to other players`
-    );
-  }
-
-  private executeEndYearParty(gameState: GameState, player: Player): void {
-    // End Year Party: All other players discard their hand and lose next turn
-
-    for (const p of gameState.players) {
-      if (p.id !== player.id) {
-        // Count cards before discarding
-        const cardsDiscarded = p.hand.length;
-
-        // Discard all cards
-        gameState.discardPile.push(...p.hand);
-        p.hand = [];
-
-        // Mark as skipping next turn
-        p.skippedTurns = (p.skippedTurns || 0) + 1;
-
-        console.log(
-          `🎉 End Year Party: ${p.nickname} discarded ${cardsDiscarded} cards and will skip next turn`
-        );
-      }
-    }
-
-    console.log(
-      `🎉 End Year Party: ${player.nickname} caused chaos for all other players!`
-    );
-  }
-
-  private executeProjectSwap(
-    gameState: GameState,
-    player: Player,
-    actionData: PlayCardActionData
-  ): void {
-    // Project Swap: Exchange entire project areas with another player
-
-    if (!actionData.targetPlayerId) {
-      throw new Error('Project Swap requires target player');
-    }
-
-    const targetPlayer = gameState.players.find(
-      p => p.id === actionData.targetPlayerId
-    );
-    if (!targetPlayer || targetPlayer.id === player.id) {
-      throw new Error('Invalid target player for Project Swap');
-    }
-
-    // Swap all modules (including stabilized ones)
-    const playerModules = [...player.modules];
-    const targetModules = [...targetPlayer.modules];
-
-    player.modules = targetModules;
-    targetPlayer.modules = playerModules;
-
-    console.log(
-      `🔄 Project Swap: ${player.nickname} and ${targetPlayer.nickname} completely swapped their project areas`
-    );
-  }
-
-  private hasDuplicateModuleColors(modules: any[]): boolean {
-    const colors = modules
-      .filter(m => m.color !== ModuleColor.MULTICOLOR)
-      .map(m => m.color);
-    return colors.length !== new Set(colors).size;
+    // For now, just log the operation - implement specific operation logic later
+    console.log(`Playing operation: ${operationCard.effect}`);
   }
 
   private nextTurn(gameState: GameState): void {
     gameState.currentPlayerIndex =
       (gameState.currentPlayerIndex + 1) % gameState.players.length;
 
-    const currentPlayer = gameState.players[gameState.currentPlayerIndex];
-
-    // Check if player should skip turn (from End Year Party)
-    if (currentPlayer && currentPlayer.skippedTurns > 0) {
-      currentPlayer.skippedTurns--;
-      console.log(
-        `⏭️ ${currentPlayer.nickname} skips turn (${currentPlayer.skippedTurns} skips remaining)`
-      );
-      this.nextTurn(gameState); // Recursively call to skip this turn
-      return;
-    }
-
-    // Draw cards for the new current player to have 3 cards
-    if (currentPlayer && currentPlayer.hand.length < 3) {
-      const cardsToDraw = 3 - currentPlayer.hand.length;
-      for (let i = 0; i < cardsToDraw && gameState.deck.length > 0; i++) {
-        const drawnCard = gameState.deck.pop()!;
-        currentPlayer.hand.push(drawnCard);
-      }
-    }
-
-    // Skip AI turns for now (basic implementation) - unless it's manual AI control
-    if (currentPlayer?.isAI) {
-      // Simple AI: skip turn for now (this would be handled by AI service in full implementation)
+    // Skip AI turns for now (basic implementation)
+    if (gameState.players[gameState.currentPlayerIndex]?.isAI) {
+      // Simple AI: skip turn for now
       this.nextTurn(gameState);
-      return;
     }
 
     if (gameState.currentPlayerIndex === 0) {
