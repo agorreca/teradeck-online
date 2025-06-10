@@ -1,0 +1,67 @@
+{
+  "name": "teradeck-online",
+  "version": "1.0.0",
+  "description": "TeraDeck Online - Juego de cartas multijugador digital",
+  "private": true,
+  "workspaces": {
+    "packages": [
+      "frontend",
+      "backend",
+      "shared",
+      "assets"
+    ]
+  },
+  "scripts": {
+    "dev": "concurrently \"npm run backend:dev\" \"npm run frontend:dev\"",
+    "frontend:dev": "cd frontend && npm run dev",
+    "backend:dev": "cd backend && npm run dev",
+    "build": "npm run frontend:build && npm run backend:build",
+    "frontend:build": "cd frontend && npm run build",
+    "backend:build": "cd backend && npm run build",
+    "test": "npm run test:backend && npm run test:frontend",
+    "test:backend": "cd backend && npm test",
+    "test:frontend": "cd frontend && npm test",
+    "test:watch": "concurrently \"npm run test:backend:watch\" \"npm run test:frontend:watch\"",
+    "test:backend:watch": "cd backend && npm run test:watch",
+    "test:frontend:watch": "cd frontend && npm run test:watch",
+    "test:coverage": "npm run test:backend:coverage && npm run test:frontend:coverage",
+    "test:backend:coverage": "cd backend && npm run test:coverage",
+    "test:frontend:coverage": "cd frontend && npm run test:coverage",
+    "lint": "npm run lint:backend && npm run lint:frontend",
+    "lint:backend": "cd backend && npm run lint",
+    "lint:frontend": "cd frontend && npm run lint",
+    "dev:frontend": "npm run dev --workspace=frontend",
+    "dev:backend": "npm run dev --workspace=backend",
+    "build:shared": "npm run build --workspace=shared",
+    "test:backend": "npm run test --workspace=backend && npm run test --workspace=frontend",
+    "test:frontend": "npm run test --workspace=frontend",
+    "test:backend": "npm run test --workspace=backend",
+    "lint:fix": "npm run lint:fix --workspace=frontend && npm run lint:fix --workspace=backend && npm run lint:fix --workspace=shared",
+    "type-check": "npm run type-check --workspace=frontend && npm run type-check --workspace=backend && npm run type-check --workspace=shared",
+    "clean": "npm run clean --workspace=frontend && npm run clean --workspace=backend && npm run clean --workspace=shared",
+    "install:all": "npm install && npm install --workspace=frontend && npm install --workspace=backend && npm install --workspace=shared"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "cross-env": "^7.0.3"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tu-usuario/teradeck-online.git"
+  },
+  "keywords": [
+    "teradeck",
+    "juego-cartas",
+    "multijugador",
+    "react",
+    "nodejs",
+    "websockets",
+    "pwa"
+  ],
+  "author": "Equipo TeraDeck",
+  "license": "MIT"
+}
