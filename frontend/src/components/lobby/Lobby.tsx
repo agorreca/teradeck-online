@@ -3,12 +3,14 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useGameSocket } from '../../hooks/useGameSocket';
 import { useTranslation } from '../../hooks/useTranslation';
+import { LanguageSettings } from '../common/LanguageSettings';
 
 export function Lobby() {
   const [nickname, setNickname] = useState('');
   const [roomCode, setRoomCode] = useState('');
   const [isCreating, setIsCreating] = useState(false);
   const [isJoining, setIsJoining] = useState(false);
+  const [showLanguageSettings, setShowLanguageSettings] = useState(false);
 
   const [showAIOptions, setShowAIOptions] = useState(false);
   const [selectedAIDifficulty, setSelectedAIDifficulty] =
@@ -121,8 +123,15 @@ export function Lobby() {
   return (
     <div className="lobby">
       <div className="lobby-container">
-        {/* Language Toggle */}
-        <div className="language-toggle">
+        {/* Language Toggle and Settings */}
+        <div className="language-toggle flex gap-2">
+          <button
+            className="btn-language"
+            onClick={() => setShowLanguageSettings(true)}
+            title={isSpanish ? 'Configuración de idioma' : 'Language settings'}
+          >
+            ⚙️ {isSpanish ? 'Idioma' : 'Language'}
+          </button>
           <button
             className="btn-language"
             onClick={toggleLanguage}
@@ -153,20 +162,17 @@ export function Lobby() {
 
           <div className="lobby-actions">
             <button
-              className="btn btn-primary w-full py-4 text-lg font-bold tracking-wide 
-                       transform transition-all duration-200 hover:scale-105 
-                       disabled:hover:scale-100 disabled:cursor-not-allowed"
-              onClick={handleCreateRoom}
-              disabled={isCreating || !nickname.trim()}
+              className="btn btn-secondary w-full py-4 text-lg font-bold tracking-wide 
+                       disabled:cursor-not-allowed opacity-60"
+              disabled={true}
+              title={
+                isSpanish
+                  ? 'Próximamente - Usa "Jugar contra IA" por ahora'
+                  : 'Coming Soon - Use "Play against AI" for now'
+              }
             >
-              {isCreating ? (
-                <span className="flex items-center justify-center gap-2">
-                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                  {tUI('lobby.creating')}
-                </span>
-              ) : (
-                tUI('lobby.createGame')
-              )}
+              {tUI('lobby.createGame')} -{' '}
+              {isSpanish ? 'Próximamente' : 'Coming Soon'}
             </button>
 
             {/* AI Game Section */}
@@ -366,6 +372,12 @@ export function Lobby() {
             </div>
           </div>
         </div>
+
+        {/* Language Settings Modal */}
+        <LanguageSettings
+          isOpen={showLanguageSettings}
+          onClose={() => setShowLanguageSettings(false)}
+        />
       </div>
     </div>
   );

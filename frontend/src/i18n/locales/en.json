@@ -102,7 +102,11 @@
   },
   "settings": {
     "title": "Settings",
-    "language": "Language",
+    "language": {
+      "title": "Language Settings",
+      "description": "Select your preferred language for the game interface.",
+      "current": "Current language"
+    },
     "spanish": "Spanish",
     "spanishAR": "Spanish (Argentina)",
     "spanishES": "Spanish (Spain)",
@@ -179,5 +183,34 @@
     "modules": "Modules",
     "player": "Player",
     "module": "Module"
+  },
+  "errors": {
+    "roomNotFound": "Room not found",
+    "roomFull": "Room is full",
+    "gameNotStarted": "Game has not started yet",
+    "gameAlreadyStarted": "Game has already started",
+    "playerNotFound": "Player not found",
+    "cardNotInHand": "Card is not in your hand",
+    "invalidTarget": "Invalid target",
+    "notYourTurn": "It's not your turn",
+    "moduleAlreadyStable": "Module is already stabilized",
+    "playerSkippedTurn": "You have skipped turns and cannot play",
+    "invalidCardType": "Invalid card type",
+    "noValidTargets": "No valid targets available",
+    "noBugTargets": "No enemy modules available to infect",
+    "noPatchTargets": "You have no modules that can be patched",
+    "noOperationTargets": "Cannot execute the conditions of this operation",
+    "cannotPlaceDuplicate": "You already have a module of this type",
+    "invalidDiscardCount": "Must discard between 1 and 3 cards",
+    "invalidActionType": "Invalid action type"
+  },
+  "common": {
+    "close": "Close",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "save": "Save",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous"
   }
 }

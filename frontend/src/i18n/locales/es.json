@@ -121,7 +121,11 @@
   },
   "settings": {
     "title": "Configuración",
-    "language": "Idioma",
+    "language": {
+      "title": "Configuración de Idioma",
+      "description": "Selecciona tu idioma preferido para la interfaz del juego.",
+      "current": "Idioma actual"
+    },
     "spanish": "Español",
     "spanishAR": "Español (Argentina)",
     "spanishES": "Español (España)",
@@ -218,5 +222,14 @@
     "cannotPlaceDuplicate": "Ya tienes un módulo de este tipo",
     "invalidDiscardCount": "Debes descartar entre 1 y 3 cartas",
     "invalidActionType": "Tipo de acción inválido"
+  },
+  "common": {
+    "close": "Cerrar",
+    "cancel": "Cancelar",
+    "confirm": "Confirmar",
+    "save": "Guardar",
+    "back": "Volver",
+    "next": "Siguiente",
+    "previous": "Anterior"
   }
 }

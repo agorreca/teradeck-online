@@ -388,8 +388,10 @@ export class GameManager {
     // Check color compatibility - multicolor bugs can target any module, any module can be targeted by multicolor bugs
     const isBugMulticolor =
       bugCard.color === 'multicolor' ||
-      bugCard.color === ModuleColor.MULTICOLOR;
-    const isModuleMulticolor = targetModule.color === ModuleColor.MULTICOLOR;
+      (bugCard.color as any) === ModuleColor.MULTICOLOR;
+    const isModuleMulticolor =
+      (targetModule.color as any) === ModuleColor.MULTICOLOR ||
+      (targetModule.color as any) === 'multicolor';
     const colorsMatch = bugCard.color === targetModule.color;
 
     if (!isBugMulticolor && !isModuleMulticolor && !colorsMatch) {
@@ -467,8 +469,10 @@ export class GameManager {
     // Check color compatibility - multicolor patches can target any module, any module can be targeted by multicolor patches
     const isPatchMulticolor =
       patchCard.color === 'multicolor' ||
-      patchCard.color === ModuleColor.MULTICOLOR;
-    const isModuleMulticolor = targetModule.color === ModuleColor.MULTICOLOR;
+      (patchCard.color as any) === ModuleColor.MULTICOLOR;
+    const isModuleMulticolor =
+      (targetModule.color as any) === ModuleColor.MULTICOLOR ||
+      (targetModule.color as any) === 'multicolor';
     const colorsMatch = patchCard.color === targetModule.color;
 
     if (!isPatchMulticolor && !isModuleMulticolor && !colorsMatch) {
@@ -536,7 +540,7 @@ export class GameManager {
   // Operation implementations
   private executeArchitectChange(
     gameState: GameState,
-    player: Player,
+    _player: Player,
     actionData: PlayCardActionData
   ): void {
     // Architect Change: Exchange modules between two players
@@ -686,8 +690,9 @@ export class GameManager {
                 m.id === t.moduleId &&
                 m.state === ModuleState.FREE &&
                 (bug.color === 'multicolor' ||
-                  bug.color === ModuleColor.MULTICOLOR ||
-                  m.color === ModuleColor.MULTICOLOR ||
+                  (bug.color as any) === ModuleColor.MULTICOLOR ||
+                  (m.color as any) === ModuleColor.MULTICOLOR ||
+                  (m.color as any) === 'multicolor' ||
                   bug.color === m.color)
             )
         );
